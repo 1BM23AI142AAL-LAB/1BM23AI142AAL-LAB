@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+int bubbleSort(int arr[], int n) {
+    int swapCount = 0; // Counter for swaps
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+                swapCount++; 
+            }
+        }
+    }
+    return swapCount; 
+}
+int main() {
+    int n;
+    printf("Enter the size of the array: ");
+    scanf("%d", &n);
+
+    int arr[n];
+    srand(time(0)); 
+    for (int i = 0; i < n; i++) arr[i] = rand() % 100;
+
+    printf("Unsorted array: ");
+    for (int i = 0; i < n; i++) printf("%d ", arr[i]);
+    clock_t start = clock();
+    int swapCount = bubbleSort(arr, n); 
+    double time_sort = ((double)(clock() - start)) / CLOCKS_PER_SEC;
+    printf("\nSorted array: ");
+    for (int i = 0; i < n; i++) printf("%d ", arr[i]);
+    printf("\nTime taken for sorting: %f seconds\n", time_sort);
+    printf("Number of swaps performed: %d\n", swapCount);
+    return 0;
+}
+
+output:
+Enter the size of the array: 10
+Unsorted array: 56 23 78 12 45 89 34 67 90 11 
+Sorted array: 11 12 23 34 45 56 67 78 89 90 
+Time taken for sorting: 0.000015 seconds
+Number of swaps performed: 22
