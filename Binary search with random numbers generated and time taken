@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+int binarySearch(int arr[], int left, int right, int target) {
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+
+        if (arr[mid] == target)
+            return mid;
+
+        if (arr[mid] < target)
+            left = mid + 1;
+        else
+            right = mid - 1;
+    }
+    return -1;
+}
+void generateRandomArray(int arr[], int n) {
+    srand(time(0)); // Seed the random number generator
+    for (int i = 0; i < n; i++) {
+        arr[i] = rand() % 100; // Generate random numbers between 0 and 99
+    }
+}
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high]; // Pivot element
+    int i = low - 1; // Index of smaller element
+
+    for (int j = low; j < high; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            // Swap arr[i] and arr[j]
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+    }
+    int temp = arr[i + 1];
+    arr[i + 1] = arr[high];
+    arr[high] = temp;
+
+    return i + 1;
+}
+void quicksort(int arr[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high); // Partitioning index
+        quicksort(arr, low, pi - 1); // Sort left subarray
+        quicksort(arr, pi + 1, high); // Sort right subarray
+    }
+}
+int main() {
+    int n, target;
+    printf("Enter the size of the array: ");
+    scanf("%d", &n);
+
+    int arr[n];
+    clock_t start_gen = clock();
+    generateRandomArray(arr, n);
+    clock_t end_gen = clock();
+    double time_gen = ((double)(end_gen - start_gen)) / CLOCKS_PER_SEC;
+    clock_t start_sort = clock();
+    quicksort(arr, 0, n - 1);
+    clock_t end_sort = clock();
+    double time_sort = ((double)(end_sort - start_sort)) / CLOCKS_PER_SEC;
+    printf("Generated and sorted array: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+    printf("Enter the target element to search: ");
+    scanf("%d", &target);
+    clock_t start_search = clock();
+    int result = binarySearch(arr, 0, n - 1, target);
+    clock_t end_search = clock();
+    double time_search = ((double)(end_search - start_search)) / CLOCKS_PER_SEC;
+    if (result == -1)
+        printf("Element is not present in the array.\n");
+    else
+        printf("Element found at index %d.\n", result);
+    printf("\nTime taken:\n");
+    printf("  - Generating random array: %f seconds\n", time_gen);
+    printf("  - Sorting the array: %f seconds\n", time_sort);
+    printf("  - Binary search: %f seconds\n", time_search);
+
+    return 0;
+}
+
+output:
+Enter the size of the array: 10
+Generated and sorted array: 3 7 12 15 22 34 45 56 67 89
+Enter the target element to search: 34
+Element found at index 5.
+
+Time taken:
+  - Generating random array: 0.000012 seconds
+  - Sorting the array: 0.000023 seconds
+  - Binary search: 0.000001 seconds
